@@ -1,0 +1,248 @@
+from tkinter import*
+from tkinter import ttk, messagebox
+import pymysql
+
+import tkinter.messagebox
+
+class Student():
+    def __init__(self,root):
+        self.root = root
+        self.root.title("Student Management System")
+        self.root.geometry("1480x700+0+0")
+        title = Label(self.root, text="Student Management System", bd=9, relief=GROOVE,
+                      font=("times new roman", 50, "bold"), bg="purple", fg="white")
+        title.pack(side=TOP, fill=X)
+        #All variables------------------------------------------------------------------
+        self.fname_var = StringVar()
+        self.lname_var = StringVar()
+        self.id_var = StringVar()
+        self.dept_var = StringVar()
+        self.email_var = StringVar()
+        self.dob_var = StringVar()
+        self.contact_var = StringVar()
+        self.gender_var = StringVar()
+        self.search_by = StringVar()
+        self.search_txt = StringVar()
+
+        # making frame__________________________________________________________________
+        Manage_Frame = Frame(self.root, bd=4, relief=RIDGE, bg="pink")
+        Manage_Frame.place(x=30, y=100, width=450, height=585)
+
+        m_title = Label(Manage_Frame, text="Informations", bg="white", fg="black", font=("times new roman", 40, "bold"))
+        m_title.grid(row=0, columnspan=2, pady=20)
+
+        lbl_fname = Label(Manage_Frame, text="First Name:", bg="white", fg="black", font=("times new roman", 20, "bold"))
+        lbl_fname.grid(row=1, column=0, pady=10, padx=20, sticky="w")
+        txt_fname = Entry(Manage_Frame,textvariable=self.fname_var, font=("times new roman", 15, "bold"), bd=5,relief=GROOVE)
+        txt_fname.grid(row=1, column=1, pady=10, padx=20, sticky="w")
+
+
+        lbl_lname = Label(Manage_Frame, text="Last Name:", bg="white", fg="black", font=("times new roman", 20, "bold"))
+        lbl_lname.grid(row=2, column=0, pady=10, padx=20, sticky="w")
+        txt_lname = Entry(Manage_Frame,textvariable=self.lname_var, font=("times new roman", 15, "bold"), bd=5,relief=GROOVE)
+        txt_lname.grid(row=2, column=1, pady=10, padx=20, sticky="w")
+
+
+
+        lbl_id = Label(Manage_Frame, text=" Student ID:", bg="white", fg="black", font=("times new roman", 20, "bold"))
+        lbl_id.grid(row=3, column=0, pady=10, padx=20, sticky="w")
+        txt_id = Entry(Manage_Frame,textvariable=self.id_var, font=("times new roman", 15, "bold"), bd=5, relief=GROOVE)
+        txt_id.grid(row=3, column=1, pady=10, padx=20, sticky="w")
+
+        lbl_dept = Label(Manage_Frame, text="Department:", bg="white", fg="black",font=("times new roman", 20, "bold"))
+        lbl_dept.grid(row=4, column=0, pady=10, padx=20, sticky="w")
+        txt_dept = Entry(Manage_Frame,textvariable=self.dept_var, font=("times new roman", 15, "bold"), bd=5, relief=GROOVE)
+        txt_dept.grid(row=4, column=1, pady=10, padx=20, sticky="w")
+
+        lbl_email = Label(Manage_Frame, text="Email:", bg="white", fg="black", font=("times new roman", 20, "bold"))
+        lbl_email.grid(row=5, column=0, pady=10, padx=20, sticky="w")
+        txt_email = Entry(Manage_Frame,textvariable=self.email_var, font=("times new roman", 15, "bold"), bd=5,relief=GROOVE)
+        txt_email.grid(row=5, column=1, pady=10, padx=20, sticky="w")
+
+        lbl_dob = Label(Manage_Frame, text="D.O.B:", bg="white", fg="black", font=("times new roman", 20, "bold"))
+        lbl_dob.grid(row=6, column=0, pady=10, padx=20, sticky="w")
+        txt_dob = Entry(Manage_Frame,textvariable=self.dob_var, font=("times new roman", 15, "bold"), bd=5,relief=GROOVE)
+        txt_dob.grid(row=6, column=1, pady=10, padx=20, sticky="w")
+
+        lbl_contact = Label(Manage_Frame, text="Contact No:", bg="white", fg="black",font=("times new roman", 20, "bold"))
+        lbl_contact.grid(row=7, column=0, pady=10, padx=20, sticky="w")
+        txt_contact = Entry(Manage_Frame,textvariable=self.contact_var, font=("times new roman", 15, "bold"), bd=5,relief=GROOVE)
+        txt_contact.grid(row=7, column=1, pady=10, padx=20, sticky="w")
+
+        lbl_gender = Label(Manage_Frame, text="Gender:", bg="white", fg="black", font=("times new roman", 20, "bold"))
+        lbl_gender.grid(row=8, column=0, pady=10, padx=20, sticky="w")
+
+        combo_gender = ttk.Combobox(Manage_Frame,textvariable=self.gender_var, font=("times new roman", 13, "bold"), state='readonly')
+        combo_gender['values'] = ("Male", "Female")
+        combo_gender.grid(row=8, column=1, pady=10, padx=20)
+
+        ##Create a new frame ...........................................................
+        details_frame = Frame(self.root, bd=4, relief=RIDGE, bg="white")
+        details_frame.place(x=500, y=100, width=880, height=585)
+
+        btn_frame = Frame(details_frame, bd=3, relief=RIDGE, bg="white")
+        btn_frame.place(x=200, y=500, width=428)
+
+        Addbtn = Button(btn_frame, text="Add", width=10, bg="pink", fg="black", relief=GROOVE,font=("times of roman", 9, "bold"),command=self.add_student).grid(row=0, column=0, padx=10,pady=10)
+        Updatebtn = Button(btn_frame, text="Update", width=10, bg="pink", fg="black", relief=GROOVE,font=("times of roman", 9, "bold"),command=self.update_data).grid(row=0, column=1, padx=10,pady=10)
+        Dltbtn = Button(btn_frame, text="Delete", width=10, bg="pink", fg="black", relief=GROOVE,font=("times of roman", 9, "bold"),command=self.delete_data).grid(row=0, column=2, padx=10, pady=10)
+        clearbtn = Button(btn_frame, text="Clear", width=10, bg="pink", fg="black", relief=GROOVE,font=("times of roman", 9, "bold"),command=self.clear).grid(row=0, column=3, padx=10,pady=10)
+
+        lbl_search = Label(details_frame, text="Search By ID", bg="pink", fg="black", font=("times new roman", 15, "bold"))
+        lbl_search.grid(row=0, column=0, pady=10, padx=20, sticky="w")
+
+        lbl_search = Label(details_frame, text="Enter:", bg="pink", fg="black", font=("times new roman", 15, "bold"))
+        lbl_search.grid(row=0, column=2, pady=10, padx=20, sticky="w")
+
+        txt_search = Entry(details_frame,textvariable=self.search_txt, font=("times new roman", 15, "bold"), bd=5,relief=GROOVE, bg="pink")
+        txt_search.grid(row=0, column=3, pady=10, padx=20, sticky="w")
+
+        Searchbtn = Button(details_frame, text="Search", width=10, bg="pink", fg="black", relief=GROOVE,font=("times of roman", 9, "bold"),command=self.search_data).grid(row=0, column=4, padx=10, pady=10)
+        Showbtn = Button(details_frame, text="Show All", width=10, bg="pink", fg="black", relief=GROOVE,font=("times of roman", 9, "bold"),command=self.fetch_data).grid(row=0, column=5, padx=10, pady=10)
+
+     #Create Table frame.................................................................
+
+        table_frame = Frame(details_frame, bd=4, relief=RIDGE, bg="pink")
+        table_frame.place(x=10, y=70, width=760, height=400)
+    ###Creating Scrollbar..................................................................
+        scroll_x = Scrollbar(table_frame, orient=HORIZONTAL)
+        scroll_y = Scrollbar(table_frame, orient=VERTICAL)
+
+        self.Student_table = ttk.Treeview(table_frame, column=("First Name","Last Name", "Student ID", "Department", "Email", "DOB", "Contact No", "Gender"), xscrollcommand=scroll_y,yscrollcommand=scroll_x)
+        scroll_x.pack(side="bottom", fill="x")
+        scroll_y.pack(side="right", fill="y")
+
+        scroll_x.config(command=self.Student_table.xview())
+        scroll_y.config(command=self.Student_table.yview())
+
+        self.Student_table.heading("First Name", text="First Name")
+        self.Student_table.heading("Last Name", text="last Name")
+        self.Student_table.heading("Student ID", text="Student ID")
+        self.Student_table.heading("Department", text="Department")
+        self.Student_table.heading("Email", text="Email")
+        self.Student_table.heading("DOB", text="D.O.B")
+        self.Student_table.heading("Contact No", text="Contact No")
+        self.Student_table.heading("Gender", text="Gender")
+
+        self.Student_table['show'] = 'headings'
+
+        self.Student_table.column("First Name", width=80)
+        self.Student_table.column("Last Name", width=80)
+        self.Student_table.column("Student ID", width=80)
+        self.Student_table.column("Department", width=80)
+        self.Student_table.column("Email", width=80)
+        self.Student_table.column("DOB", width=80)
+        self.Student_table.column("Contact No", width=80)
+        self.Student_table.column("Gender", width=80)
+        self.Student_table.pack(fill="both", expand=1)
+        self.Student_table.bind("<ButtonRelease-1>", self.get_cursor)
+        self.fetch_data()
+
+
+    def  add_student(self):
+             if self.fname_var.get() == "" or self.id_var.get() == "":
+                  messagebox.showerror("Error", "All fields are required to fill")
+             else:
+                 con = pymysql.connect(host="localhost",user="root",password="",database="sms")
+
+                 cursor = con.cursor()
+                 cursor.execute("insert into student values(%s,%s,%s,%s,%s,%s,%s,%s)",(self.fname_var.get(),
+                                                                                   self.lname_var.get(),
+                                                                                   self.id_var.get(),
+                                                                                   self.dept_var.get(),
+                                                                                   self.email_var.get(),
+                                                                                   self.dob_var.get(),
+                                                                                   self.contact_var.get(),
+                                                                                   self.gender_var.get()))
+                 con.commit()
+                 self.fetch_data()
+                 self.clear()
+                 con.close()
+                 messagebox.showinfo("Success", "Record has been inserted")
+
+    def fetch_data(self):
+        con = pymysql.connect(host="localhost", user="root", password="", database="sms")
+        cursor = con.cursor()
+        cursor.execute('select *from student')
+        rows = cursor.fetchall()
+        if len(rows) != 0:
+            self.Student_table.delete(*self.Student_table.get_children())
+            for row in rows:
+                self.Student_table.insert('', END, values=row)
+            con.commit()
+        con.close()
+
+
+
+    def get_cursor(self,ev):
+        curosor_row= self.Student_table.focus()
+        contents = self.Student_table.item(curosor_row)
+        row=contents['values']
+        self.fname_var.set(row[0])
+        self.lname_var.set(row[1])
+        self.id_var.set(row[2])
+        self.dept_var.set(row[3])
+        self.email_var.set(row[4])
+        self.dob_var.set(row[5])
+        self.contact_var.set(row[6])
+        self.gender_var.set(row[7])
+
+    def clear(self):
+        self.fname_var.set(" ")
+        self.lname_var.set(" ")
+        self.id_var.set(" ")
+        self.dept_var.set(" ")
+        self.email_var.set(" ")
+        self.dob_var.set(" ")
+        self.contact_var.set(" ")
+        self.gender_var.set(" ")
+
+    def update_data(self):
+        con = pymysql.connect(host="localhost", user="root", password="", database="sms")
+        cursor = con.cursor()
+        cursor.execute("update student set fname= %s,lname= %s,dept= %s,email= %s,dob= %s,contact= %s,gender= %s where id= %s",(
+                                                                                                         self.fname_var.get(),
+                                                                                                         self.lname_var.get(),
+                                                                                                         self.dept_var.get(),
+                                                                                                         self.email_var.get(),
+                                                                                                         self.dob_var.get(),
+                                                                                                         self.contact_var.get(),
+                                                                                                         self.gender_var.get(),
+                                                                                                         self.id_var.get()))
+
+        con.commit()
+        self.fetch_data()
+        self.clear()
+        con.close()
+        messagebox.showinfo("Success", "Record has been updated")
+
+    def delete_data(self):
+        con = pymysql.connect(host="localhost", user="root", password="", database="sms")
+        cursor = con.cursor()
+        cursor.execute("delete from student where id=%s",self.id_var.get())
+        con.commit()
+        con.close()
+        self.fetch_data()
+        self.clear()
+        messagebox.showinfo("Success","Record has been deleted ")
+
+    def search_data(self):
+        con = pymysql.connect(host="localhost", user="root", password="", database="sms")
+        cursor = con.cursor()
+        cursor.execute("select *from student where id LIKE '%"+ str(self.search_txt.get())+"%'")
+        rows=cursor.fetchall()
+        if len(rows)!=0:
+            self.Student_table.delete(*self.Student_table.get_children())
+            for row in rows:
+                self.Student_table.insert('', END, values=row)
+            con.commit()
+        con.close()
+
+        messagebox.showinfo("Search", "Sucessfully Find Out ")
+
+
+class Student():
+    pass
+    root = Tk()
+    obj= Student(root)
+    root.mainloop()

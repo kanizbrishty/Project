@@ -1,0 +1,72 @@
+from tkinter import*
+root=Tk()
+def getval():
+    print("Showing the data")
+    print("*******************************")
+    print("User first name:", firstnamevalue.get())
+    print("User last name:", lastnamevalue.get())
+    print("Date of Birth:", dateofbirthvalue.get())
+    print("Address :", addressvalue.get())
+    print("Email:", emailvalue.get())
+    print("Password:", passwordvalue.get())
+    print("...............................................................................................")
+
+    print("Submitting form")
+    print("firstname ---- lastname ---- dateofbirth---- address---- email---- password---- preorder\n")
+    print(
+        f"{firstnamevalue.get() , lastnamevalue.get() ,  dateofbirthvalue.get() , addressvalue.get(), emailvalue.get() ,  passwordvalue.get() , preordervalue.get()}")
+
+    # write and append  file
+    with open("records.txt", "a") as f:
+     f.write(
+        f"{firstnamevalue.get() ,  lastnamevalue.get() , dateofbirthvalue.get() ,  addressvalue.get(), emailvalue.get() ,  passwordvalue.get() , preordervalue.get()}\n")
+root.title("Entry form")
+root.geometry("770x544")
+root.maxsize(650,400)
+root.minsize(550,350)
+Label(root,text="Welcome to this registration form",font="comicsansms 14 bold").grid(row=0,column=3)
+#create label
+Firstname = Label(root,text="Firstname: ")
+lastname =Label(root,text="Lastname:")
+address=Label(root,text="address:")
+dateofbirth=Label(root,text="Date of Birth:")
+email=Label(root,text="Email:")
+password =Label(root,text="Password:")
+
+#pack of these upper label by using grid
+Firstname.grid(row=2)
+lastname.grid(row=3)
+dateofbirth.grid(row=4)
+address.grid(row=5)
+email.grid(row=6)
+password.grid(row=7)
+
+#inserting all the string into these variables
+firstnamevalue = StringVar()
+lastnamevalue = StringVar()
+dateofbirthvalue=StringVar()
+addressvalue=StringVar()
+emailvalue=StringVar()
+passwordvalue=StringVar()
+preordervalue=IntVar()
+
+firstnameentry = Entry(root, textvariable = firstnamevalue)
+lastnameentry = Entry(root, textvariable = lastnamevalue)
+dateofbirthentry = Entry(root, textvariable = dateofbirthvalue)
+addressentry = Entry(root, textvariable = addressvalue)
+emailentry = Entry(root, textvariable = emailvalue)
+passwordentry = Entry(root, textvariable = passwordvalue)
+
+firstnameentry.grid(row=2,column=1)
+lastnameentry.grid(row=3,column=1)
+dateofbirthentry.grid(row=4,column=1)
+addressentry.grid(row=5,column=1)
+emailentry.grid(row=6,column=1)
+passwordentry.grid(row=7,column=1)
+
+#create button and pack both of them at a time
+Button(text="submit",borderwidth=6,command=getval).grid()
+preorder=Checkbutton(text="Do you want to preorder?",variable=preordervalue)
+preorder.grid(row=8,column=3)
+
+root.mainloop()
